@@ -17,6 +17,20 @@ const create = async (input: CreateProductInput): Promise<CreateProductResponse>
   };
 };
 
+const findAll = async (): Promise<ServiceResponse<Product[]>> => {
+  const products = await ProductModel.findAll();
+  return {
+    status: 'SUCCESSFUL',
+    data: products.map((product) => ({
+      id: product.dataValues.id,
+      name: product.dataValues.name,
+      price: product.dataValues.price,
+      orderId: product.dataValues.orderId,
+    })),
+  };
+};
+
 export default {
   create,
+  findAll,
 };
