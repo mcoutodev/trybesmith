@@ -5,7 +5,23 @@ import { ServiceResponse } from '../types/ServiceResponse';
 type CreateProductInput = Omit<Product, 'id'>;
 type CreateProductResponse = ServiceResponse<Omit<Product, 'orderId'>>;
 
+const validateInput = ({ name, price, orderId }: CreateProductInput): string | null => {
+  if (!name || !price || !orderId) {
+    return 'Todos os campos são obrigatórios';
+  }
+  return null;
+};
+
 const create = async (input: CreateProductInput): Promise<CreateProductResponse> => {
+  const error = validateInput(input);
+  if (error) {
+    return {
+      status: 'INVALID DATA',
+      data: {
+        message: error,
+      },
+    };
+  }
   const newProduct = await ProductModel.create(input);
   return {
     status: 'CREATED',

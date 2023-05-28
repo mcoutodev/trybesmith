@@ -9,16 +9,20 @@ type ProductIds = {
 export type OrderWithProductIds = Omit<Order, 'productId'> & ProductIds;
 type FindAllOrdersResponse = ServiceResponse<OrderWithProductIds[]>;
 
-const findAll = async (): Promise<FindAllOrdersResponse> => {
+const findAllTransaction = async (): Promise<OrderWithProductIds[]> => {
   const orders = await OrderModel.findAll();
   const productIds = await ProductModel.findAll({ attributes: ['id', 'orderId'] });
-  const ordersWithProductIds = orders.map((order) => ({
+  return orders.map((order) => ({
     id: order.dataValues.id,
     userId: order.dataValues.userId,
     productIds: productIds
       .filter((product) => product.dataValues.orderId === order.dataValues.id)
       .map((product) => product.dataValues.id),
   }));
+};
+
+const findAll = async (): Promise<FindAllOrdersResponse> => {
+  const ordersWithProductIds = await findAllTransaction();
   return {
     status: 'SUCCESSFUL',
     data: ordersWithProductIds,
