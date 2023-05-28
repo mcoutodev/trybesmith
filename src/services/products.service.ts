@@ -1,22 +1,24 @@
-import ProductModel from '../database/models/product.model';
+import ProductModel, {
+  ProductInputtableTypes,
+  ProductSequelizeModel,
+} from '../database/models/product.model';
 import { Product } from '../types/Product';
 import { ServiceResponse } from '../types/ServiceResponse';
 
-type CreateProductInput = Omit<Product, 'id'>;
 type CreateProductResponse = ServiceResponse<Omit<Product, 'orderId'>>;
 
-const validateInput = ({ name, price, orderId }: CreateProductInput): string | null => {
+const validateInput = ({ name, price, orderId }: ProductInputtableTypes): string | null => {
   if (!name || !price || !orderId) {
     return 'Todos os campos são obrigatórios';
   }
   return null;
 };
 
-const create = async (input: CreateProductInput): Promise<CreateProductResponse> => {
+const create = async (input: ProductInputtableTypes): Promise<CreateProductResponse> => {
   const error = validateInput(input);
   if (error) {
     return {
-      status: 'INVALID DATA',
+      status: 'INVALID_DATA',
       data: {
         message: error,
       },
@@ -33,16 +35,11 @@ const create = async (input: CreateProductInput): Promise<CreateProductResponse>
   };
 };
 
-const findAll = async (): Promise<ServiceResponse<Product[]>> => {
+const findAll = async (): Promise<ServiceResponse<ProductSequelizeModel[]>> => {
   const products = await ProductModel.findAll();
   return {
     status: 'SUCCESSFUL',
-    data: products.map((product) => ({
-      id: product.dataValues.id,
-      name: product.dataValues.name,
-      price: product.dataValues.price,
-      orderId: product.dataValues.orderId,
-    })),
+    data: products,
   };
 };
 

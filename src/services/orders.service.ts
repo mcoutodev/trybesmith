@@ -1,31 +1,24 @@
 import OrderModel from '../database/models/order.model';
 import ProductModel from '../database/models/product.model';
-import { Order } from '../types/Order';
 import { ServiceResponse } from '../types/ServiceResponse';
 
-type ProductIds = {
-  productIds: number[];
-};
-export type OrderWithProductIds = Omit<Order, 'productId'> & ProductIds;
-type FindAllOrdersResponse = ServiceResponse<OrderWithProductIds[]>;
-
-const findAllTransaction = async (): Promise<OrderWithProductIds[]> => {
-  const orders = await OrderModel.findAll();
-  const productIds = await ProductModel.findAll({ attributes: ['id', 'orderId'] });
-  return orders.map((order) => ({
-    id: order.dataValues.id,
-    userId: order.dataValues.userId,
-    productIds: productIds
-      .filter((product) => product.dataValues.orderId === order.dataValues.id)
-      .map((product) => product.dataValues.id),
-  }));
-};
+type FindAllOrdersResponse = ServiceResponse<{
+  id: number;
+  userId: number;
+  productIds?: number[];
+}[]>;
 
 const findAll = async (): Promise<FindAllOrdersResponse> => {
-  const ordersWithProductIds = await findAllTransaction();
+  const orders = await OrderModel.findAll({
+    include: [{ model: ProductModel, as: 'productIds', attributes: ['id'] }],
+  });
   return {
     status: 'SUCCESSFUL',
-    data: ordersWithProductIds,
+    data: orders.map((order) => ({
+      id: order.dataValues.id,
+      userId: order.dataValues.userId,
+      productIds: order.dataValues.productIds?.map((product) => product.id) ?? [],
+    })),
   };
 };
 

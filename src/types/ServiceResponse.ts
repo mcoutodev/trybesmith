@@ -3,7 +3,7 @@ type ServiceResponseErrorType = (
   | 'BAD_REQUEST'
   | 'UNAUTHORIZED'
   | 'INTERNAL_SERVER_ERROR'
-  | 'INVALID DATA'
+  | 'INVALID_DATA'
 );
 
 export type ServiceResponseError = {
