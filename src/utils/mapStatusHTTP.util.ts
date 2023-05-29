@@ -3,6 +3,9 @@ export default function mapStatusHTTP(status: string): number {
     INVALID_DATA: 400,
     UNAUTHORIZED: 401,
     NOT_FOUND: 404,
+    'any.required': 400,
+    'string.min': 422,
+    'string.base': 422,
   };
   return statusHTTPMap[status] ?? 500;
 }
