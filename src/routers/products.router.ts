@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import productsController from '../controllers/products.controller';
+import productsMiddleware from '../middlewares/products.middleware';
 
 const productsRouter = Router();
 
-productsRouter.post('/', productsController.create);
+productsRouter.post('/', productsMiddleware.validateInput, productsController.create);
 
 productsRouter.get('/', productsController.findAll);
 

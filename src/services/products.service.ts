@@ -5,25 +5,9 @@ import ProductModel, {
 import { Product } from '../types/Product';
 import { ServiceResponse } from '../types/ServiceResponse';
 
-type CreateProductResponse = ServiceResponse<Omit<Product, 'orderId'>>;
+type CreateProductResponse = Promise<ServiceResponse<Omit<Product, 'orderId'>>>;
 
-const validateInput = ({ name, price, orderId }: ProductInputtableTypes): string | null => {
-  if (!name || !price || !orderId) {
-    return 'Todos os campos são obrigatórios';
-  }
-  return null;
-};
-
-const create = async (input: ProductInputtableTypes): Promise<CreateProductResponse> => {
-  const error = validateInput(input);
-  if (error) {
-    return {
-      status: 'INVALID_DATA',
-      data: {
-        message: error,
-      },
-    };
-  }
+const create = async (input: ProductInputtableTypes): CreateProductResponse => {
   const newProduct = await ProductModel.create(input);
   return {
     status: 'CREATED',

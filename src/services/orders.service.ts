@@ -2,13 +2,13 @@ import OrderModel from '../database/models/order.model';
 import ProductModel from '../database/models/product.model';
 import { ServiceResponse } from '../types/ServiceResponse';
 
-type FindAllOrdersResponse = ServiceResponse<{
+type FindAllOrdersResponse = Promise<ServiceResponse<{
   id: number;
   userId: number;
   productIds?: number[];
-}[]>;
+}[]>>;
 
-const findAll = async (): Promise<FindAllOrdersResponse> => {
+const findAll = async (): FindAllOrdersResponse => {
   const orders = await OrderModel.findAll({
     include: [{ model: ProductModel, as: 'productIds', attributes: ['id'] }],
   });
