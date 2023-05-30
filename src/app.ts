@@ -7,6 +7,8 @@ const app = express();
 
 app.use(express.json());
 
+// rotas
+
 app.use('/products', productsRouter);
 
 app.use('/orders', ordersRouter);
