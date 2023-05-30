@@ -11,17 +11,17 @@ const product = Joi.object({
     'string.min': '"price" length must be at least 3 characters long',
     'any.required': '"price" is required',
   }),
+  orderId: Joi.number(),
 });
 
 const order = Joi.object({
-  userId: Joi.number().required().messages({
-    'number.base': '"userId" must be a number',
-  }),
+  userId: Joi.number().required(),
   productIds: Joi.array().items(Joi.number().required().messages({
     'number.base': '"productIds" must include only numbers',
   })).required().messages({
     'array.base': '"productIds" must be an array',
     'any.required': '"productIds" is required',
+    'array.includesRequiredUnknowns': '"productIds" must include only numbers',
   }),
 });
 

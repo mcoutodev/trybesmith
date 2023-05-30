@@ -8,6 +8,7 @@ export default function mapStatusHTTP(status: string): number {
     'string.base': 422,
     'number.base': 422,
     'array.base': 422,
+    'array.includesRequiredUnknowns': 422,
   };
   return statusHTTPMap[status] ?? 500;
 }
