@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+import db from '../database/models';
 import OrderModel from '../database/models/order.model';
 import ProductModel from '../database/models/product.model';
 import { ServiceResponse } from '../types/ServiceResponse';
@@ -22,6 +24,28 @@ const findAll = async (): FindAllOrdersResponse => {
   };
 };
 
+type CreateOrderInput = {
+  userId: number;
+  productIds: number[];
+};
+
+type CreateOrderResponse = Promise<ServiceResponse<CreateOrderInput>>;
+
+const create = async ({ userId, productIds }: CreateOrderInput): CreateOrderResponse => {
+  await db.transaction(async (transaction) => {
+    const newOrder = await OrderModel.create({ userId }, { transaction });
+    await ProductModel.update({ orderId: newOrder.dataValues.id }, {
+      where: { id: { [Op.in]: productIds } },
+      transaction,
+    });
+  });
+  return {
+    status: 'CREATED',
+    data: { userId, productIds },
+  };
+};
+
 export default {
   findAll,
+  create,
 };

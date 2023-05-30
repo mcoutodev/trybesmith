@@ -3,7 +3,7 @@ import UserModel from '../database/models/user.model';
 import { Login } from '../types/Login';
 import { ServiceResponse } from '../types/ServiceResponse';
 import { Token } from '../types/Token';
-import jwtUtils from '../utils/jwt.util';
+import jwtUtil from '../utils/jwt.util';
 
 const verifyLogin = async ({ username, password }: Login): Promise<ServiceResponse<Token>> => {
   const user = await UserModel.findOne({ where: { username } });
@@ -12,7 +12,7 @@ const verifyLogin = async ({ username, password }: Login): Promise<ServiceRespon
       status: 'UNAUTHORIZED', data: { message: 'Username or password invalid' },
     };
   }
-  const token = jwtUtils.sign({
+  const token = jwtUtil.sign({
     username: user.dataValues.username, id: user.dataValues.id,
   });
   return {

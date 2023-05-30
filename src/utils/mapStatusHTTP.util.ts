@@ -6,6 +6,8 @@ export default function mapStatusHTTP(status: string): number {
     'any.required': 400,
     'string.min': 422,
     'string.base': 422,
+    'number.base': 422,
+    'array.base': 422,
   };
   return statusHTTPMap[status] ?? 500;
 }
