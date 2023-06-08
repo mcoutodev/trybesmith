@@ -28,16 +28,16 @@ Entre no diretório do projeto
   cd trybesmith
 ```
 
-Instale as dependências
+Suba o container
 
 ```bash
-  npm install
+  docker-compose up -d
 ```
 
-Inicie o servidor na porta 3001
+Acesse a API na porta 3001
 
-```bash
-  npm run start
+```http
+  localhost:3001
 ```
 
 ## Documentação da API
